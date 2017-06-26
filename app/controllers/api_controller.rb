@@ -28,13 +28,14 @@ class ApiController < ApplicationController
   end
 
   def event_handler(event)
+    Rails.logger(event.inspect)
     case event.type
     when Line::Bot::Event::MessageType::Text
       reply_to_message(event)
     when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
       reply_to_image(event)
-    when Line::Bot::Event::Postback
-      reply_to_poctback(event)
+    # when Line::Bot::Event::Postback
+    #   reply_to_poctback(event)
     end
 
   end
