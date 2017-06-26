@@ -63,3 +63,6 @@ gem 'line-bot-api', require: 'line/bot'
 
 # .env
 gem 'dotenv-rails', groups: [:development, :test]
+
+# for heroku
+gem 'rails_12factor', group: :production
