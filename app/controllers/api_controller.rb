@@ -28,7 +28,8 @@ class ApiController < ApplicationController
   end
 
   def event_handler(event)
-    Rails.logger.info(event.type)
+    # ポストバックのときはtypeがない
+    Rails.logger.info(event.inspect)
     case event.type
     when Line::Bot::Event::MessageType::Text
       reply_to_message(event)
