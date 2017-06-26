@@ -54,6 +54,7 @@ class ApiController < ApplicationController
   # テキストメッセージに反応
   def reply_to_message(event)
     msg = event.message['text']
+    Rails.logger.info(msg)
     if msg == 'クイズ'
       message = {
           type: 'template',
@@ -92,6 +93,7 @@ class ApiController < ApplicationController
   end
 
   def reply_to_image(event)
+    Rails.logger.info('image')
     message = {
         type: 'text',
         text: '画像っすね'
