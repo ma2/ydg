@@ -33,6 +33,8 @@ class ApiController < ApplicationController
       reply_to_message(event)
     when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
       reply_to_image(event)
+    when Line::Bot::Event::Postback
+      reply_to_poctback(event)
     end
 
   end
@@ -40,30 +42,29 @@ class ApiController < ApplicationController
   # テキストメッセージに反応
   def reply_to_message(event)
     msg = event.message['text']
-    Rails.logger.info(msg)
     if msg == 'クイズ'
       message = {
           type: 'template',
           altText: '漢字のクイズ',
           template: {
               type: 'buttons',
-              title: 'Menu',
-              text: 'Please select',
+              title: '匕首',
+              text: 'なんて読むかな？',
               actions: [
                   {
                       type: 'postback',
-                      label: 'Buy',
-                      data: 'action=buy&itemid=123'
+                      label: 'いくび',
+                      data: 'q=1&choice=1'
                   },
                   {
                       type: 'postback',
-                      label: 'Add to cart',
-                      data: 'action=add&itemid=123'
+                      label: 'あいくち',
+                      data: 'q=1&choice=2'
                   },
                   {
                       type: 'uri',
-                      label: 'View detail',
-                      uri: 'http://example.com/page/123'
+                      label: 'おしゅ',
+                      data: 'q=1&choice=3'
                   }
               ]
           }
@@ -78,11 +79,19 @@ class ApiController < ApplicationController
     @client.reply_message(event['replyToken'], message)
   end
 
-  def reply_to_image(event)
-    Rails.logger.info('image')
+  # ポストバック（ユーザの選択）に返事
+  def reply_to_postback(event)
     message = {
         type: 'text',
-        text: '画像っすね'
+        text: 'そうかもねー'
+    }
+    @client.reply_message(event['replyToken'], message)
+  end
+
+  def reply_to_image(event)
+    message = {
+        type: 'text',
+        text: '画像だよねー'
     }
     @client.reply_message(event['replyToken'], message)
   end
