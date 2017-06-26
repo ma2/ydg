@@ -44,9 +44,9 @@ class ApiController < ApplicationController
     if msg == 'クイズ'
       message = {
           type: 'template',
+          altText: '漢字のクイズ',
           template: {
               type: 'buttons',
-              thumbnailImageUrl: 'https://example.com/bot/images/image.jpg',
               title: 'Menu',
               text: 'Please select',
               actions: [
