@@ -31,7 +31,7 @@ class ApiController < ApplicationController
       Rails.logger.info(event.class)
       Rails.logger.info(event.inspect)
       case event
-      when Line::Bot::Event::MessageType
+      when Line::Bot::Event::Message
         message_handler(event)
       # when Line::Bot::Event::Postback
       #   reply_to_postback(event)
