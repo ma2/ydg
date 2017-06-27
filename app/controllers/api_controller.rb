@@ -33,8 +33,8 @@ class ApiController < ApplicationController
       case event
       when Line::Bot::Event::Message
         message_handler(event)
-      # when Line::Bot::Event::Postback
-      #   reply_to_postback(event)
+      when Line::Bot::Event::Postback
+        reply_to_postback(event)
       end
     end
   end
