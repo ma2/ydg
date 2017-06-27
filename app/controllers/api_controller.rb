@@ -13,9 +13,7 @@ class ApiController < ApplicationController
     end
 
     events = @client.parse_events_from(body)
-    events.each do |event|
-      event_handler(event)
-    end
+    event_handler(events)
     render text: 'OK'
   end
 
@@ -27,18 +25,24 @@ class ApiController < ApplicationController
     end
   end
 
-  def event_handler(event)
-    # ポストバックのときはtypeがない
-    Rails.logger.info(event.inspect)
+  def event_handler(events)
+    events.each do |event|
+      case event
+      when Line::Bot::Event::MessageType
+        message_handler(event)
+      when Line::Bot::Event::Postback
+        reply_to_postback(event)
+      end
+    end
+  end
+
+  def message_handler(event)
     case event.type
     when Line::Bot::Event::MessageType::Text
       reply_to_message(event)
     when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
       reply_to_image(event)
-      # when Line::Bot::Event::Postback
-      #   reply_to_poctback(event)
     end
-
   end
 
   # テキストメッセージに反応
