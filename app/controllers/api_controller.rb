@@ -27,11 +27,14 @@ class ApiController < ApplicationController
 
   def event_handler(events)
     events.each do |event|
+      Rails.logger.info('------------')
+      Rails.logger.info(event.class)
+      Rails.logger.info(event.inspect)
       case event
       when Line::Bot::Event::MessageType
         message_handler(event)
-      when Line::Bot::Event::Postback
-        reply_to_postback(event)
+      # when Line::Bot::Event::Postback
+      #   reply_to_postback(event)
       end
     end
   end
