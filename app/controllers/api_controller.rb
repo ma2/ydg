@@ -103,7 +103,7 @@ class ApiController < ApplicationController
   def user_handler(event)
     userid = event['source']['userId']
     # すでに登録済みユーザか？
-    user = User.find_or_create_by(userid: userid) do
+    user = User.find_or_create_by(userid: userid) do |u|
       # 新規ユーザならプロファイルを取得
       response = @client.get_profile(userid)
       case response
@@ -112,7 +112,7 @@ class ApiController < ApplicationController
         p contact['displayName']
         p contact['pictureUrl']
         p contact['statusMessage']
-        user.name = contact['displayName']
+        u.name = contact['displayName']
       end
     end
     user
