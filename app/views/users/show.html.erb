@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Useid:</strong>
+  <%= @user.useid %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @user.name %>
+</p>
+
+<p>
+  <strong>Q1:</strong>
+  <%= @user.q1 %>
+</p>
+
+<p>
+  <strong>Q2:</strong>
+  <%= @user.q2 %>
+</p>
+
+<p>
+  <strong>Q3:</strong>
+  <%= @user.q3 %>
+</p>
+
+<p>
+  <strong>Q4:</strong>
+  <%= @user.q4 %>
+</p>
+
+<p>
+  <strong>Q5:</strong>
+  <%= @user.q5 %>
+</p>
+
+<%= link_to 'Edit', edit_user_path(@user) %> |
+<%= link_to 'Back', users_path %>

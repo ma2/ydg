@@ -27,29 +27,23 @@ class ApiController < ApplicationController
 
   def event_handler(events)
     events.each do |event|
-      Rails.logger.info('------------')
-      Rails.logger.info(event.class)
-      Rails.logger.info(event.inspect)
+      user = user_handler(event)
       case event
       when Line::Bot::Event::Message
-        message_handler(event)
+        case event.type
+        when Line::Bot::Event::MessageType::Text
+          reply_to_message(event, user)
+        when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
+          reply_to_image(event, user)
+        end
       when Line::Bot::Event::Postback
-        reply_to_postback(event)
+        reply_to_postback(event, user)
       end
     end
   end
 
-  def message_handler(event)
-    case event.type
-    when Line::Bot::Event::MessageType::Text
-      reply_to_message(event)
-    when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
-      reply_to_image(event)
-    end
-  end
-
   # テキストメッセージに反応
-  def reply_to_message(event)
+  def reply_to_message(event, user)
     msg = event.message['text']
     if msg == 'クイズ'
       message = {
@@ -89,20 +83,39 @@ class ApiController < ApplicationController
   end
 
   # ポストバック（ユーザの選択）に返事
-  def reply_to_postback(event)
+  def reply_to_postback(event, user)
     message = {
       type: 'text',
-      text: 'そうかもねー'
+      text: "そうかもねー、#{user.name}さん"
     }
     @client.reply_message(event['replyToken'], message)
   end
 
-  def reply_to_image(event)
+  def reply_to_image(event, user)
     message = {
       type: 'text',
       text: '画像だよねー'
     }
     @client.reply_message(event['replyToken'], message)
+  end
+
+  # ユーザの管理
+  def user_handler(event)
+    userid = event['source']['userId']
+    # すでに登録済みユーザか？
+    user = User.find_or_create_by(userid: userid) do
+      # 新規ユーザならプロファイルを取得
+      response = @client.get_profile(userid)
+      case response
+      when Net::HTTPSuccess then
+        contact = JSON.parse(response.body)
+        p contact['displayName']
+        p contact['pictureUrl']
+        p contact['statusMessage']
+        user.update(name: contact['displayName'])
+      end
+    end
+    user
   end
 
 end
