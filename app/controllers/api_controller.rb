@@ -112,7 +112,7 @@ class ApiController < ApplicationController
         p contact['displayName']
         p contact['pictureUrl']
         p contact['statusMessage']
-        user.update(name: contact['displayName'])
+        user.name = contact['displayName']
       end
     end
     user
