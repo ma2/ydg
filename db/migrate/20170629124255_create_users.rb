@@ -1,7 +1,7 @@
 class CreateUsers < ActiveRecord::Migration[5.1]
   def change
     create_table :users do |t|
-      t.string :useid
+      t.string :userid
       t.string :name
       t.integer :q1, default: 0
       t.integer :q2, default: 0
