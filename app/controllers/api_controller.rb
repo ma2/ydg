@@ -45,12 +45,12 @@ class ApiController < ApplicationController
   # テキストメッセージに反応
   def reply_to_message(event, user)
     msg = event.message['text']
-    if msg =~ /[謎なぞ]/
+    if msg =~ /謎|なぞ/
       message = {
         type: 'template',
         altText: 'なぞなぞ開始',
         template: {
-          thumbnailImageUrl: helper.image_url('ydg.png'),
+          thumbnailImageUrl: helpers.image_url('ydg.png'),
           type: 'buttons',
           title: '部屋の中になんかあるよ',
           text: '見てみる？',
@@ -63,7 +63,7 @@ class ApiController < ApplicationController
           ]
         }
       }
-    elsif msg =~ /[だれ誰]/
+    elsif msg =~ /だれ|誰/
       message = {
         type: 'text',
         text: 'わたしマジョミナ！ 魔女の見習い、よろしくね！'
@@ -81,13 +81,14 @@ class ApiController < ApplicationController
   # ポストバック（ユーザの選択）に返事
   def reply_to_postback(event, user)
     p, choice = event['postback']['data'].split('=')
+    img = helpers.image_url('ydg.png')
     case choice
     when 'start'
       message = {
         type: 'template',
         altText: 'なぞなぞ',
         template: {
-          thumbnailImageUrl: image_url('ydg.png'),
+          thumbnailImageUrl: img,
           type: 'buttons',
           title: 'カレンダーと机だね',
           text: '興味ある？ 私はないな',
@@ -110,7 +111,7 @@ class ApiController < ApplicationController
         type: 'template',
         altText: 'なぞなぞ',
         template: {
-          thumbnailImageUrl: image_url('ydg.png'),
+          thumbnailImageUrl: img,
           type: 'buttons',
           title: 'あ、カレンダーに印があるよ',
           text: '9月16日、池袋コミュニティカレッジで何かが起きる！ だって、だって！',
@@ -133,7 +134,7 @@ class ApiController < ApplicationController
         type: 'template',
         altText: 'なぞなぞ',
         template: {
-          thumbnailImageUrl: image_url('ydg.png'),
+          thumbnailImageUrl: img,
           type: 'buttons',
           title: 'あ、机に落書きがあるよ',
           text: '米光講座脱出ゲーム始まる！ だって、だって！',
