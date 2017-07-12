@@ -45,38 +45,34 @@ class ApiController < ApplicationController
   # テキストメッセージに反応
   def reply_to_message(event, user)
     msg = event.message['text']
-    if msg == 'クイズ'
+    if msg =~ /[謎なぞ]/
       message = {
         type: 'template',
-        altText: '漢字のクイズ',
+        altText: 'なぞなぞ開始',
         template: {
+          thumbnailImageUrl: image_url('ydg.png'),
           type: 'buttons',
-          title: '匕首',
-          text: 'なんて読むかな？',
+          title: '部屋の中になんかあるよ',
+          text: '見てみる？',
           actions: [
             {
               type: 'postback',
-              label: 'いくび',
-              data: 'q=1&choice=1'
+              label: 'うん。部屋を見てみる',
+              data: 'event=start'
             },
-            {
-              type: 'postback',
-              label: 'あいくち',
-              data: 'q=1&choice=2'
-            },
-            {
-              type: 'postback',
-              label: 'おしゅ',
-              data: 'q=1&choice=3'
-            }
           ]
         }
+      }
+    elsif msg =~ /[だれ誰]/
+      message = {
+        type: 'text',
+        text: 'わたしマジョミナ！ 魔女の見習い、よろしくね！'
       }
     else
       # オウム返し
       message = {
         type: 'text',
-        text: event.message['text']
+        text: "#{user.name}さん、「#{event.message['text']}」っていいました？"
       }
     end
     @client.reply_message(event['replyToken'], message)
@@ -84,22 +80,96 @@ class ApiController < ApplicationController
 
   # ポストバック（ユーザの選択）に返事
   def reply_to_postback(event, user)
-    message = {
-      type: 'text',
-      text: "そうかもねー、#{user.name}さん"
-    }
+    p, choice = event['postback']['data'].split('=')
+    case choice
+    when 'start'
+      message = {
+        type: 'template',
+        altText: 'なぞなぞ',
+        template: {
+          thumbnailImageUrl: image_url('ydg.png'),
+          type: 'buttons',
+          title: 'カレンダーと机だね',
+          text: '興味ある？ 私はないな',
+          actions: [
+            {
+              type: 'postback',
+              label: 'カレンダーをチェック！',
+              data: 'event=look_calendar'
+            },
+            {
+              type: 'postback',
+              label: '机ってどんな？',
+              data: 'event=look_desk'
+            },
+          ]
+        }
+      }
+    when 'look_calendar'
+      message = {
+        type: 'template',
+        altText: 'なぞなぞ',
+        template: {
+          thumbnailImageUrl: image_url('ydg.png'),
+          type: 'buttons',
+          title: 'あ、カレンダーに印があるよ',
+          text: '9月16日、池袋コミュニティカレッジで何かが起きる！ だって、だって！',
+          actions: [
+            {
+              type: 'postback',
+              label: 'なんだってー',
+              data: 'event=look_desk'
+            },
+            {
+              type: 'postback',
+              label: '机ってどんな？',
+              data: 'event=look_desk'
+            },
+          ]
+        }
+      }
+    when 'look_desk'
+      message = {
+        type: 'template',
+        altText: 'なぞなぞ',
+        template: {
+          thumbnailImageUrl: image_url('ydg.png'),
+          type: 'buttons',
+          title: 'あ、机に落書きがあるよ',
+          text: '米光講座脱出ゲーム始まる！ だって、だって！',
+          actions: [
+            {
+              type: 'postback',
+              label: 'なんだってー',
+              data: 'event=end'
+            },
+            {
+              type: 'postback',
+              label: 'なんですとー',
+              data: 'event=end'
+            },
+          ]
+        }
+      }
+    when 'end'
+      message = {
+        type: 'text',
+        text: '9月16日 15:30から、池袋コミュニティカレッジ8Fで、米光講座脱出ゲームが開催。みんな来てね！ マジョミナのお知らせでした'
+      }
+    end
     @client.reply_message(event['replyToken'], message)
   end
 
   def reply_to_image(event, user)
     message = {
       type: 'text',
-      text: '画像だよねー'
+      text: "#{user.name}さんらしい画像だよねー"
     }
     @client.reply_message(event['replyToken'], message)
   end
 
-  # ユーザの管理
+  # userIdからユーザを取得する
+  # 新規ユーザならDBに登録する
   def user_handler(event)
     userid = event['source']['userId']
     # すでに登録済みユーザか？
@@ -109,9 +179,6 @@ class ApiController < ApplicationController
       case response
       when Net::HTTPSuccess then
         contact = JSON.parse(response.body)
-        p contact['displayName']
-        p contact['pictureUrl']
-        p contact['statusMessage']
         u.name = contact['displayName']
       end
     end
