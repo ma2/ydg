@@ -57,7 +57,7 @@ class ApiController < ApplicationController
           actions: [
             {
               type: 'postback',
-              label: 'うん。部屋を見てみる',
+              label: '見てみる',
               data: 'event=start'
             },
           ]
@@ -66,7 +66,7 @@ class ApiController < ApplicationController
     elsif msg =~ /だれ|誰/
       message = {
         type: 'text',
-        text: 'わたしマジョミナ！ 魔女の見習い、よろしくね！'
+        text: 'わたしマジョミナ！ 魔女の見習い、人呼んで「見習い魔女」！ よろしくね！'
       }
     else
       # オウム返し
@@ -81,14 +81,15 @@ class ApiController < ApplicationController
   # ポストバック（ユーザの選択）に返事
   def reply_to_postback(event, user)
     p, choice = event['postback']['data'].split('=')
-    img = helpers.image_url('ydg.png')
+    img1 = helpers.image_url('majomina.png')
+    img2 = helpers.image_url('ydg.png')
     case choice
     when 'start'
       message = {
         type: 'template',
         altText: 'なぞなぞ',
         template: {
-          thumbnailImageUrl: img,
+          thumbnailImageUrl: img1,
           type: 'buttons',
           title: 'カレンダーと机だね',
           text: '興味ある？ 私はないな',
@@ -111,7 +112,7 @@ class ApiController < ApplicationController
         type: 'template',
         altText: 'なぞなぞ',
         template: {
-          thumbnailImageUrl: img,
+          thumbnailImageUrl: img1,
           type: 'buttons',
           title: 'あ、カレンダーに印があるよ',
           text: '9月16日、池袋コミュニティカレッジで何かが起きる！ だって、だって！',
@@ -134,7 +135,7 @@ class ApiController < ApplicationController
         type: 'template',
         altText: 'なぞなぞ',
         template: {
-          thumbnailImageUrl: img,
+          thumbnailImageUrl: img1,
           type: 'buttons',
           title: 'あ、机に落書きがあるよ',
           text: '米光講座脱出ゲーム始まる！ だって、だって！',
@@ -155,7 +156,7 @@ class ApiController < ApplicationController
     when 'end'
       message = {
         type: 'text',
-        text: '9月16日 15:30から、池袋コミュニティカレッジ8Fで、米光講座脱出ゲームが開催。みんな来てね！ マジョミナのお知らせでした'
+        text: '9月16日 15:30から、池袋コミュニティカレッジ8Fで、米光講座脱出ゲーム開催。みんな来てね！ マジョミナのお知らせでした。'
       }
     end
     @client.reply_message(event['replyToken'], message)
