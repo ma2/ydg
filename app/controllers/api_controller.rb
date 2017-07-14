@@ -50,7 +50,7 @@ class ApiController < ApplicationController
         type: 'template',
         altText: 'なぞなぞ開始',
         template: {
-          thumbnailImageUrl: helpers.image_url('ydg.png'),
+          thumbnailImageUrl: helpers.image_url('majomina.png'),
           type: 'buttons',
           title: '部屋の中になんかあるよ',
           text: '見てみる？',
