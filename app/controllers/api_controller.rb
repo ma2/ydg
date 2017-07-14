@@ -124,7 +124,7 @@ class ApiController < ApplicationController
             },
             {
               type: 'postback',
-              label: '机ってどんな？',
+              label: '待って待って。机は？',
               data: 'event=look_desk'
             },
           ]
