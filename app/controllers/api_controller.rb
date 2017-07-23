@@ -52,8 +52,8 @@ class ApiController < ApplicationController
         template: {
           thumbnailImageUrl: helpers.image_url('kensi.png'),
           type: 'buttons',
-          title: 'とぼけんなよー',
-          text: '爺ちゃんのそのまた爺ちゃんのときの王様がボンクラでさ、それに懲りたもんで、それ以来新しい王様はバトルで決めることになっているんだ。そして、ジャーン、新しい王様を決めるバトルがもうすぐ始まるのさ！ くーっ、待ちきれねえ',
+          title: 'ほんとに知らないのかよー',
+          text: '爺ちゃんのそのまた爺ちゃんのときの王様がボンクラでさ、それに懲りたもんで、新しい王様はバトルで決めることになったんだよ',
           actions: [
             {
               type: 'postback',
@@ -66,7 +66,7 @@ class ApiController < ApplicationController
     elsif msg =~ /だれ|誰/
       message = {
         type: 'text',
-        text: "オイラ、ケンシだ。こう見えても剣士の見習いだぜ。へえ、あんた#{user.name}って言うのか、よろしくな。あんたもあれのために来たんだろ。言わなくても分かるんだよな"
+        text: "オイラはケンシだ。へえ、あんた#{user.name}って言うのか、よろしくな。あんたもあれのために来たんだろ。言わなくても分かるんだよな"
       }
     else
       # オウム返し
