@@ -45,19 +45,19 @@ class ApiController < ApplicationController
   # テキストメッセージに反応
   def reply_to_message(event, user)
     msg = event.message['text']
-    if msg =~ /謎|なぞ/
+    if msg =~ /あれ/
       message = {
         type: 'template',
         altText: 'なぞなぞ開始',
         template: {
-          thumbnailImageUrl: helpers.image_url('majomina.png'),
+          thumbnailImageUrl: helpers.image_url('kensi.png'),
           type: 'buttons',
-          title: '部屋の中になんかあるよ',
-          text: '見てみる？',
+          title: 'とぼけんなよー',
+          text: '爺ちゃんのそのまた爺ちゃんのときの王様がボンクラでさ、それに懲りたもんで、それ以来新しい王様はバトルで決めることになっているんだ。そして、ジャーン、新しい王様を決めるバトルがもうすぐ始まるのさ！ くーっ、待ちきれねえ',
           actions: [
             {
               type: 'postback',
-              label: '見てみる',
+              label: '詳しく教えて',
               data: 'event=start'
             },
           ]
@@ -66,13 +66,13 @@ class ApiController < ApplicationController
     elsif msg =~ /だれ|誰/
       message = {
         type: 'text',
-        text: 'わたしマジョミナ！ 魔女の見習い、人呼んで「見習い魔女」！ よろしくね！'
+        text: "オイラ、ケンシだ。こう見えても剣士の見習いだぜ。へえ、あんた#{user.name}って言うのか、よろしくな。あんたもあれのために来たんだろ。言わなくても分かるんだよな"
       }
     else
       # オウム返し
       message = {
         type: 'text',
-        text: "#{user.name}さん、「#{event.message['text']}」っていいました？"
+        text: "#{user.name}、「#{event.message['text']}」って言った？"
       }
     end
     @client.reply_message(event['replyToken'], message)
@@ -81,8 +81,7 @@ class ApiController < ApplicationController
   # ポストバック（ユーザの選択）に返事
   def reply_to_postback(event, user)
     p, choice = event['postback']['data'].split('=')
-    img1 = helpers.image_url('majomina.png')
-    img2 = helpers.image_url('ydg.png')
+    img1 = helpers.image_url('kensi.png')
     case choice
     when 'start'
       message = {
@@ -91,63 +90,89 @@ class ApiController < ApplicationController
         template: {
           thumbnailImageUrl: img1,
           type: 'buttons',
-          title: 'カレンダーと机だね',
-          text: '興味ある？ 私はないな',
+          title: '場所と時間さえ守れば誰でも参加できるんだ。すごいだろ',
+          text: "#{user.name}もやるだろ？ オイラはもちろん参加だ。これでオイラも王様だ！",
           actions: [
             {
               type: 'postback',
-              label: 'カレンダーをチェック！',
-              data: 'event=look_calendar'
+              label: 'いつやるの',
+              data: 'event=wwhen_owhere'
             },
             {
               type: 'postback',
-              label: '机ってどんな？',
-              data: 'event=look_desk'
+              label: 'どこでやるの',
+              data: 'event=owhen_wwhere'
             },
           ]
         }
       }
-    when 'look_calendar'
+    when 'wwhen_owhere'
       message = {
         type: 'template',
         altText: 'なぞなぞ',
         template: {
           thumbnailImageUrl: img1,
           type: 'buttons',
-          title: 'あ、カレンダーに印があるよ',
-          text: '9月16日、池袋コミュニティカレッジで何かが起きる！ だって、だって！',
+          title: 'かー、そんなことも知らねえのかよ',
+          text: '9月16日だよ。羊皮紙にメモっておきな。15:30開始だから、少し早めに来るんだぞ。あ、オイラって親切だな。',
           actions: [
             {
               type: 'postback',
-              label: 'なんだってー',
-              data: 'event=look_desk'
-            },
-            {
-              type: 'postback',
-              label: '待って待って。机は？',
-              data: 'event=look_desk'
+              label: '場所を聞いてなかったよ',
+              data: 'event=xwhen_wwhere'
             },
           ]
         }
       }
-    when 'look_desk'
+    when 'owhen_wwhere'
       message = {
         type: 'template',
         altText: 'なぞなぞ',
         template: {
           thumbnailImageUrl: img1,
           type: 'buttons',
-          title: 'あ、机に落書きがあるよ',
-          text: '米光講座脱出ゲーム始まる！ だって、だって！',
+          title: 'おいおい、冗談はよしてくれよ',
+          text: "王位継承バトルって言ったら池袋コミュニティカレッジ8Fに決まってるだろ。王宮じゃなくて豊島区だからな。#{user.name}は間違えそうだから気をつけろよ",
           actions: [
             {
               type: 'postback',
-              label: 'なんだってー',
+              label: 'いつやるんだっけ',
+              data: 'event=wwhen_xwhere'
+            },
+          ]
+        }
+      }
+    when 'xwhen_wwhere'
+      message = {
+        type: 'template',
+        altText: 'なぞなぞ',
+        template: {
+          thumbnailImageUrl: img1,
+          type: 'buttons',
+          title: 'おいおい、冗談はよしてくれよ',
+          text: "王位継承バトルって言ったら池袋コミュニティカレッジ8Fに決まってるだろ。王宮じゃなくて豊島区だからな。#{user.name}は間違えそうだから気をつけろよ",
+          actions: [
+            {
+              type: 'postback',
+              label: 'よし、分かった',
               data: 'event=end'
             },
+          ]
+        }
+      }
+    when 'wwhen_xwhere'
+      message = {
+        type: 'template',
+        altText: 'なぞなぞ',
+        template: {
+          thumbnailImageUrl: img1,
+          type: 'buttons',
+          title: 'かー、そんなことも知らねえのかよ',
+          text: '9月16日だよ。羊皮紙にメモっておきな。15:30開始だから、少し早めに来るんだぞ。あ、オイラって親切だな。',
+          actions: [
             {
               type: 'postback',
-              label: 'なんですとー',
+              label: 'そういうことか',
               data: 'event=end'
             },
           ]
@@ -156,7 +181,7 @@ class ApiController < ApplicationController
     when 'end'
       message = {
         type: 'text',
-        text: '9月16日 15:30から、池袋コミュニティカレッジ8Fで、米光講座脱出ゲーム開催。みんな来てね！ マジョミナのお知らせでした。'
+        text: "9月16日 15:30から、池袋コミュニティカレッジ8Fで、リアル合戦ゲーム「王様のバトル」鐘の音が７度なると勝負の月が出る……ゴクリ、いよいよ始まるな、#{user.name}。じゃあ、当日会おうぜ！"
       }
     end
     @client.reply_message(event['replyToken'], message)
@@ -165,7 +190,7 @@ class ApiController < ApplicationController
   def reply_to_image(event, user)
     message = {
       type: 'text',
-      text: "#{user.name}さんらしい画像だよねー"
+      text: "#{user.name}は、これが好きなのか？"
     }
     @client.reply_message(event['replyToken'], message)
   end
