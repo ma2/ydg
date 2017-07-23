@@ -53,7 +53,7 @@ class ApiController < ApplicationController
           thumbnailImageUrl: helpers.image_url('kensi.png'),
           type: 'buttons',
           title: 'ほんとに知らないのかよー',
-          text: '爺ちゃんのそのまた爺ちゃんのときの王様がボンクラでさ、それに懲りたもんで、新しい王様はバトルで決めることになったんだよ',
+          text: '爺ちゃんのそのまた爺ちゃんのときの王様がボンクラでさ、それに懲りて、新しい王様はバトルで決めてるんだよ',
           actions: [
             {
               type: 'postback',
@@ -82,6 +82,7 @@ class ApiController < ApplicationController
   def reply_to_postback(event, user)
     p, choice = event['postback']['data'].split('=')
     img1 = helpers.image_url('kensi.png')
+    img2 = helpers.image_url('kokuchi.png')
     case choice
     when 'start'
       message = {
@@ -131,8 +132,8 @@ class ApiController < ApplicationController
         template: {
           thumbnailImageUrl: img1,
           type: 'buttons',
-          title: 'おいおい、冗談はよしてくれよ',
-          text: "王位継承バトルって言ったら池袋コミュニティカレッジ8Fに決まってるだろ。王宮じゃなくて豊島区だからな。#{user.name}は間違えそうだから気をつけろよ",
+          title: '王位継承バトルって言ったらさ',
+          text: "池袋コミュニティカレッジ8Fに決まってるだろ。王宮じゃなくて豊島区だからな。#{user.name}は間違えるなよ",
           actions: [
             {
               type: 'postback',
@@ -149,8 +150,8 @@ class ApiController < ApplicationController
         template: {
           thumbnailImageUrl: img1,
           type: 'buttons',
-          title: 'おいおい、冗談はよしてくれよ',
-          text: "王位継承バトルって言ったら池袋コミュニティカレッジ8Fに決まってるだろ。王宮じゃなくて豊島区だからな。#{user.name}は間違えそうだから気をつけろよ",
+          title: "もしかして#{userm.name}って方向音痴か？",
+          text: "王位継承バトルは池袋コミュニティカレッジ8Fなんだけど、ちゃんと来れるか？",
           actions: [
             {
               type: 'postback',
@@ -167,8 +168,8 @@ class ApiController < ApplicationController
         template: {
           thumbnailImageUrl: img1,
           type: 'buttons',
-          title: 'かー、そんなことも知らねえのかよ',
-          text: '9月16日だよ。羊皮紙にメモっておきな。15:30開始だから、少し早めに来るんだぞ。あ、オイラって親切だな。',
+          title: '9月16日だよ',
+          text: 'そんなことも知らずにここに来たのか。羊皮紙にメモだ。15:30開始だから、少し早めに来るんだぞ。',
           actions: [
             {
               type: 'postback',
@@ -178,10 +179,28 @@ class ApiController < ApplicationController
           ]
         }
       }
-    when 'end'
+    when 'announce'
+      message = {
+        type: 'template',
+        altText: '告知',
+        template: {
+          thumbnailImageUrl: img2,
+          type: 'buttons',
+          title: "#{user.name}、9月16日に会おう",
+          text: 'まあ、オイラは負けないけどな',
+          actions: [
+            {
+              type: 'postback',
+              label: '楽しみにしてるよ',
+              data: 'event=xend'
+            },
+          ]
+        }
+      }
+    when 'xend'
       message = {
         type: 'text',
-        text: "9月16日 15:30から、池袋コミュニティカレッジ8Fで、リアル合戦ゲーム「王様のバトル」鐘の音が７度なると勝負の月が出る……ゴクリ、いよいよ始まるな、#{user.name}。じゃあ、当日会おうぜ！"
+        text: "9月16日15:30、池袋コミュニティカレッジ8Fだ。#{user.name}と会えるのが楽しみだぜ"
       }
     end
     @client.reply_message(event['replyToken'], message)
