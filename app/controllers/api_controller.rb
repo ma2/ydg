@@ -150,7 +150,7 @@ class ApiController < ApplicationController
         template: {
           thumbnailImageUrl: img1,
           type: 'buttons',
-          title: "#{userm.name}って方向音痴か？",
+          title: "まさか#{user.name}って方向音痴か？",
           text: '王位継承バトルは池袋コミュニティカレッジ8Fでやるんだけど、ちゃんと来れるか？',
           actions: [
             {
