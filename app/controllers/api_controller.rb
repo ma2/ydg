@@ -150,13 +150,13 @@ class ApiController < ApplicationController
         template: {
           thumbnailImageUrl: img1,
           type: 'buttons',
-          title: "もしかして#{userm.name}って方向音痴か？",
-          text: "王位継承バトルは池袋コミュニティカレッジ8Fなんだけど、ちゃんと来れるか？",
+          title: "#{userm.name}って方向音痴か？",
+          text: '王位継承バトルは池袋コミュニティカレッジ8Fでやるんだけど、ちゃんと来れるか？',
           actions: [
             {
               type: 'postback',
-              label: 'よし、分かった',
-              data: 'event=end'
+              label: '大丈夫、だいじょうぶ',
+              data: 'event=announce'
             },
           ]
         }
@@ -174,7 +174,7 @@ class ApiController < ApplicationController
             {
               type: 'postback',
               label: 'そういうことか',
-              data: 'event=end'
+              data: 'event=announce'
             },
           ]
         }
@@ -192,12 +192,12 @@ class ApiController < ApplicationController
             {
               type: 'postback',
               label: '楽しみにしてるよ',
-              data: 'event=xend'
+              data: 'event=end'
             },
           ]
         }
       }
-    when 'xend'
+    when 'end'
       message = {
         type: 'text',
         text: "9月16日15:30、池袋コミュニティカレッジ8Fだ。#{user.name}と会えるのが楽しみだぜ"
