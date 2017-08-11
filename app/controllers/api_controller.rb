@@ -45,7 +45,7 @@ class ApiController < ApplicationController
   # テキストメッセージに反応
   def reply_to_message(event, user)
     msg = event.message['text']
-    if msg =~ /あれ/
+    if msg =~ /あれ|なぞ/
       message = {
         type: 'template',
         altText: 'なぞなぞ開始',
