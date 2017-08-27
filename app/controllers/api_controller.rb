@@ -43,36 +43,32 @@ class ApiController < ApplicationController
   end
 
   # テキストメッセージに反応
+  # 告知開始
   def reply_to_message(event, user)
     msg = event.message['text']
-    if msg =~ /あれ|なぞ/
+    if msg == 'ケンシリセット'
+      user.update(:q1, 0)
+      message = {
+        type: 'text',
+        text: "#{user.name}のq1を#{user.q1}にリセットしたぜ"
+      }
+    else
       message = {
         type: 'template',
-        altText: 'なぞなぞ開始',
+        altText: 'なぞなぞ開始0',
         template: {
           thumbnailImageUrl: helpers.image_url('kensi.png'),
           type: 'buttons',
-          title: 'ほんとに知らないのかよー',
-          text: '爺ちゃんのそのまた爺ちゃんのときの王様がボンクラでさ、それに懲りて、新しい王様はバトルで決めてるんだよ',
+          title: 'オイラはケンシだ',
+          text: "へえ、あんた#{user.name}って言うのか、よろしくな。あんたもあれのために来たんだろ。言わなくても分かるんだよな",
           actions: [
             {
               type: 'postback',
-              label: '詳しく教えて',
-              data: 'event=start'
+              label: 'あれって？',
+              data: 'event=start0'
             },
           ]
         }
-      }
-    elsif msg =~ /だれ|誰/
-      message = {
-        type: 'text',
-        text: "オイラはケンシだ。へえ、あんた#{user.name}って言うのか、よろしくな。あんたもあれのために来たんだろ。言わなくても分かるんだよな"
-      }
-    else
-      # オウム返し
-      message = {
-        type: 'text',
-        text: "#{user.name}、「#{event.message['text']}」って言った？"
       }
     end
     @client.reply_message(event['replyToken'], message)
@@ -84,7 +80,25 @@ class ApiController < ApplicationController
     img1 = helpers.image_url('kensi.png')
     img2 = helpers.image_url('kokuchi.png')
     case choice
-    when 'start'
+    when 'start0'
+      message = {
+        type: 'template',
+        altText: 'お知らせスタート',
+        template: {
+          thumbnailImageUrl: helpers.image_url('kensi.png'),
+          type: 'buttons',
+          title: 'ほんとに知らないのかよー',
+          text: '爺ちゃんのそのまた爺ちゃんのときの王様がボンクラでさ、それに懲りて、新しい王様はバトルで決めてるんだよ',
+          actions: [
+            {
+              type: 'postback',
+              label: '詳しく教えて',
+              data: 'event=start1'
+            },
+          ]
+        }
+      }
+    when 'start1'
       message = {
         type: 'template',
         altText: 'なぞなぞ',
@@ -133,7 +147,7 @@ class ApiController < ApplicationController
           thumbnailImageUrl: img1,
           type: 'buttons',
           title: '王位継承バトルって言ったらさ',
-          text: "池袋コミュニティカレッジ8Fに決まってるだろ。王宮じゃなくて豊島区だからな。#{user.name}は間違えるなよ",
+          text: "池袋コミュニティカレッジ8Fに決まってるだろ。王宮じゃなくて豊島区だからな、間違えるなよ",
           actions: [
             {
               type: 'postback',
@@ -169,7 +183,7 @@ class ApiController < ApplicationController
           thumbnailImageUrl: img1,
           type: 'buttons',
           title: '9月16日だよ',
-          text: 'そんなことも知らずにここに来たのか。羊皮紙にメモだ。15:30開始だから、少し早めに来るんだぞ。',
+          text: 'そんなことも知らずにここに来たのか。いますぐ羊皮紙にメモだ。18:00開始だから、馬で来る方がいいな。',
           actions: [
             {
               type: 'postback',
@@ -200,16 +214,18 @@ class ApiController < ApplicationController
     when 'end'
       message = {
         type: 'text',
-        text: "9月16日15:30、池袋コミュニティカレッジ8Fだ。#{user.name}と会えるのが楽しみだぜ"
+        text: "9月16日18:00、池袋コミュニティカレッジ8Fだ。#{user.name}と会えるのが楽しみだぜ"
       }
     end
+    # 告知済みフラグを設定
+    user.update(:q1, 1)
     @client.reply_message(event['replyToken'], message)
   end
 
   def reply_to_image(event, user)
     message = {
       type: 'text',
-      text: "#{user.name}は、これが好きなのか？"
+      text: "#{user.name}は、それが好きなのか？"
     }
     @client.reply_message(event['replyToken'], message)
   end
