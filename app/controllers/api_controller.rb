@@ -52,7 +52,7 @@ class ApiController < ApplicationController
         type: 'text',
         text: "#{user.name}のq1を#{user.q1}にリセットしたぜ"
       }
-    else
+    elsif user.q1 == 0
       message = {
         type: 'template',
         altText: 'お知らせスタート前',
@@ -70,12 +70,75 @@ class ApiController < ApplicationController
           ]
         }
       }
+    else
+      message = {
+        type: 'template',
+        altText: 'じゃんけんスタート前',
+        template: {
+          thumbnailImageUrl: helpers.image_url('kensi.png'),
+          type: 'buttons',
+          title: 'ちょきじゃんけんはじまるよ',
+          text: 'あいこだったらちょきの勝ち、ってルールだよ。やるかい？',
+          actions: [
+            {
+              type: 'postback',
+              label: 'あいこはちょきの勝ちだね。わかった！',
+              data: 'event=janken0'
+            },
+          ]
+        }
+      }
+    end
+    @client.reply_message(event['replyToken'], message)
+  end
+
+  # ポストバックをじゃんけんと告知に分けて処理
+  def reply_to_postbacks(event, user)
+    _, choice = event['postback']['data'].split('=')
+    reply_to_announce(event, user) if choice == 'srart0'
+    reply_to_janken(event, user) if choice == 'janken0'
+  end
+
+  # ポストバック（ユーザの選択）に返事
+  # じゃんけん
+  def reply_to_janken(event, user)
+    _, choice = event['postback']['data'].split('=')
+    case choice
+    when 'start0'
+      message = {
+        type: 'template',
+        altText: 'じゃんけんスタート',
+        template: {
+          thumbnailImageUrl: helpers.image_url('kensi.png'),
+          type: 'buttons',
+          title: '手を選んでくれよ',
+          text: 'あいこだったらちょきの勝ちだぞ。ちょきじゃんけん、じゃんけんぽん！',
+          actions: [
+            {
+              type: 'postback',
+              label: 'ぐー',
+              data: 'event=janken_goo'
+            },
+            {
+              type: 'postback',
+              label: 'ちょき',
+              data: 'event=janken_choki'
+            },
+            {
+              type: 'postback',
+              label: 'ぱー',
+              data: 'event=janken_paa'
+            },
+          ]
+        }
+      }
     end
     @client.reply_message(event['replyToken'], message)
   end
 
   # ポストバック（ユーザの選択）に返事
-  def reply_to_postback(event, user)
+  # 告知
+  def reply_to_announce(event, user)
     p, choice = event['postback']['data'].split('=')
     img1 = helpers.image_url('kensi.png')
     img2 = helpers.image_url('kokuchi.png')
@@ -85,7 +148,7 @@ class ApiController < ApplicationController
         type: 'template',
         altText: 'お知らせスタート',
         template: {
-          thumbnailImageUrl: helpers.image_url('kensi.png'),
+          thumbnailImageUrl: img1,
           type: 'buttons',
           title: 'ほんとに知らないのかよー',
           text: '爺ちゃんのそのまた爺ちゃんのときの王様がボンクラでさ、それに懲りて、新しい王様はバトルで決めてるんだよ',
