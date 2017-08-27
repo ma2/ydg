@@ -70,7 +70,7 @@ class ApiController < ApplicationController
           ]
         }
       }
-    elsif user.q2 != 0
+    elsif user.q2 == 0
       message = {
         type: 'template',
         altText: 'じゃんけんスタート前',
