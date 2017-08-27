@@ -47,7 +47,7 @@ class ApiController < ApplicationController
   def reply_to_message(event, user)
     msg = event.message['text']
     if msg == 'ケンシリセット'
-      user.update(:q1, 0)
+      user.update(q1: 0)
       message = {
         type: 'text',
         text: "#{user.name}のq1を#{user.q1}にリセットしたぜ"
@@ -55,7 +55,7 @@ class ApiController < ApplicationController
     else
       message = {
         type: 'template',
-        altText: 'なぞなぞ開始0',
+        altText: 'お知らせスタート前',
         template: {
           thumbnailImageUrl: helpers.image_url('kensi.png'),
           type: 'buttons',
@@ -218,7 +218,7 @@ class ApiController < ApplicationController
       }
     end
     # 告知済みフラグを設定
-    user.update(:q1, 1)
+    user.update(q1: 1)
     @client.reply_message(event['replyToken'], message)
   end
 
