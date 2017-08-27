@@ -37,7 +37,7 @@ class ApiController < ApplicationController
           reply_to_image(event, user)
         end
       when Line::Bot::Event::Postback
-        reply_to_postback(event, user)
+        reply_to_postbacks(event, user)
       end
     end
   end
