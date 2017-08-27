@@ -70,7 +70,7 @@ class ApiController < ApplicationController
           ]
         }
       }
-    else
+    elsif user.q2 != 0
       message = {
         type: 'template',
         altText: 'じゃんけんスタート前',
@@ -82,12 +82,14 @@ class ApiController < ApplicationController
           actions: [
             {
               type: 'postback',
-              label: 'あいこはちょきの勝ちだね。わかった！',
+              label: 'やる！',
               data: 'event=janken0'
             },
           ]
         }
       }
+    else
+      # 結果発表
     end
     @client.reply_message(event['replyToken'], message)
   end
@@ -131,6 +133,13 @@ class ApiController < ApplicationController
             },
           ]
         }
+      }
+    when /janken_(.*)/
+      gcp = %(goo choki paa).index($1)
+      user.update(q2: gcp)
+      message = {
+        type: 'text',
+        text: "結果はxxxに発表するから、その頃にはなしかけてくれよな"
       }
     end
     @client.reply_message(event['replyToken'], message)
