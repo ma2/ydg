@@ -104,7 +104,7 @@ class ApiController < ApplicationController
   def reply_to_janken(event, user)
     _, choice = event['postback']['data'].split('=')
     case choice
-    when 'start0'
+    when 'janken0'
       message = {
         type: 'template',
         altText: 'じゃんけんスタート',
