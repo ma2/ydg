@@ -135,7 +135,7 @@ class ApiController < ApplicationController
         }
       }
     when /janken_(.*)/
-      gcp = %(goo choki paa).index($1)
+      gcp = %w(goo choki paa).index($1)
       user.update(q2: gcp)
       message = {
         type: 'text',
