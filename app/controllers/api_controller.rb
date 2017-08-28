@@ -1,3 +1,5 @@
+include TimeUtil
+
 class ApiController < ApplicationController
   force_ssl
   protect_from_forgery except: [:callback]
@@ -43,7 +45,8 @@ class ApiController < ApplicationController
   end
 
   # テキストメッセージに反応
-  # 告知開始
+  # やりとり開始
+  # 告知、じゃんけん、じゃんけん結果
   def reply_to_message(event, user)
     msg = event.message['text']
     if msg == 'ケンシリセット'
@@ -70,7 +73,7 @@ class ApiController < ApplicationController
           ]
         }
       }
-    elsif user.q2 == 0
+    elsif user.q2 == 0 && janken_time?
       message = {
         type: 'template',
         altText: 'じゃんけんスタート前',
@@ -88,17 +91,21 @@ class ApiController < ApplicationController
           ]
         }
       }
+    elsif user.q2 != 0 && janken_result_time?
+      # じゃんけん結果発表
     else
-      # 結果発表
+      # 次のじゃんけんまで待ってもらう
     end
     @client.reply_message(event['replyToken'], message)
   end
 
   # ポストバックをじゃんけんと告知に分けて処理
+  # TODO: start0ｊkanken0で分けているので、次のイベントから正しく処理されない
+  # イベント名などで区別するべき
   def reply_to_postbacks(event, user)
     _, choice = event['postback']['data'].split('=')
-    reply_to_announce(event, user) if choice == 'srart0'
-    reply_to_janken(event, user) if choice == 'janken0'
+    reply_to_announce(event, user) unless choice.start_with?('janken')
+    reply_to_janken(event, user) if choice.start_with?('janken')
   end
 
   # ポストバック（ユーザの選択）に返事
@@ -141,6 +148,8 @@ class ApiController < ApplicationController
         type: 'text',
         text: "結果はxxxに発表するから、その頃にはなしかけてくれよな"
       }
+    else
+      # ？
     end
     @client.reply_message(event['replyToken'], message)
   end
