@@ -101,8 +101,6 @@ class ApiController < ApplicationController
   end
 
   # ポストバックをじゃんけんと告知に分けて処理
-  # TODO: start0ｊkanken0で分けているので、次のイベントから正しく処理されない
-  # イベント名などで区別するべき
   def reply_to_postbacks(event, user)
     _, choice = event['postback']['data'].split('=')
     reply_to_announce(event, user) unless choice.start_with?('janken')
@@ -144,13 +142,13 @@ class ApiController < ApplicationController
       }
     when /janken_(.*)/
       gcp = %w(goo choki paa).index($1)
-      user.update(q2: gcp)
+      user.update(q2: gcp+1)
       message = {
         type: 'text',
-        text: "結果はxxxに発表するから、その頃にはなしかけてくれよな"
+        text: "結果は#{next_result_time}に発表するから、その頃にまた話しかけてくれよな"
       }
     else
-      # ？
+
     end
     @client.reply_message(event['replyToken'], message)
   end
@@ -160,7 +158,7 @@ class ApiController < ApplicationController
   def reply_to_announce(event, user)
     p, choice = event['postback']['data'].split('=')
     img1 = helpers.image_url('kensi.png')
-    img2 = helpers.image_url('kokuchi.png')
+    img2 = helpers.image_url('kokuchi2.png')
     case choice
     when 'start0'
       message = {
@@ -265,7 +263,7 @@ class ApiController < ApplicationController
           thumbnailImageUrl: img1,
           type: 'buttons',
           title: '9月16日だよ',
-          text: 'そんなことも知らずにここに来たのか。いますぐ羊皮紙にメモだ。18:00開始だから、馬で来る方がいいな。',
+          text: 'そんなことも知らずにここに来たのか。いますぐ羊皮紙にメモだ。17:00開始だから、馬で来る方がいいな。',
           actions: [
             {
               type: 'postback',
@@ -296,7 +294,7 @@ class ApiController < ApplicationController
     when 'end'
       message = {
         type: 'text',
-        text: "9月16日18:00、池袋コミュニティカレッジ8Fだ。#{user.name}と会えるのが楽しみだぜ"
+        text: "9月16日17:00、池袋コミュニティカレッジ8Fだ。#{user.name}と会えるのが楽しみだぜ"
       }
     end
     # 告知済みフラグを設定
