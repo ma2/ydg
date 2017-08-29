@@ -1,3 +1,4 @@
+require 'time_util'
 include TimeUtil
 
 class ApiController < ApplicationController
