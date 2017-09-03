@@ -74,26 +74,26 @@ class ApiController < ApplicationController
           ]
         }
       }
-    elsif user.q2 == 0 && janken_time?
-      message = {
-        type: 'template',
-        altText: 'じゃんけんスタート前',
-        template: {
-          thumbnailImageUrl: helpers.image_url('kensi.png'),
-          type: 'buttons',
-          title: 'ちょきじゃんけんはじまるよ',
-          text: 'あいこだったらちょきの勝ち、ってルールだよ。やるかい？',
-          actions: [
-            {
-              type: 'postback',
-              label: 'やる！',
-              data: 'event=janken0'
-            },
-          ]
-        }
-      }
-    elsif user.q2 != 0 && janken_result_time?
-      # じゃんけん結果発表
+    # elsif user.q2 == 0 && janken_time?
+    #   message = {
+    #     type: 'template',
+    #     altText: 'じゃんけんスタート前',
+    #     template: {
+    #       thumbnailImageUrl: helpers.image_url('kensi.png'),
+    #       type: 'buttons',
+    #       title: 'ちょきじゃんけんはじまるよ',
+    #       text: 'あいこだったらちょきの勝ち、ってルールだよ。やるかい？',
+    #       actions: [
+    #         {
+    #           type: 'postback',
+    #           label: 'やる！',
+    #           data: 'event=janken0'
+    #         },
+    #       ]
+    #     }
+    #   }
+    # elsif user.q2 != 0 && janken_result_time?
+    #   # じゃんけん結果発表
     else
       # 次のじゃんけんまで待ってもらう
     end
