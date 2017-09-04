@@ -26,4 +26,20 @@ module TimeUtil
     return "#{tm.hour}:45" if min >= 15 && min < 45
     "#{tm.hour+1}:15"
   end
+
+  # 最後のじゃんけんid
+  def last_jid
+    tm = Time.current.strftime('%Y%m%d%H')
+    min = (tm.min >= 0 && tm.min < 30) ? '00' : '30'
+    tm + min
+  end
+
+  # 今のじゃんけんid
+  def current_jid
+    tm = Time.current
+    min = '--'
+    min = '00' if (tm.min >= 0 && tm.min < 15)
+    min = '30' if (tm.min >= 30 && tm.min < 45)
+    tm.strftime("%Y%m%d%H#{min}")
+  end
 end

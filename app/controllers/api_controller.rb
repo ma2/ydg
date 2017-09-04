@@ -56,6 +56,12 @@ class ApiController < ApplicationController
         type: 'text',
         text: "#{user.name}のq1を#{user.q1}にリセットしたぜ"
       }
+    elsif msg == 'ケンシジャンケン'
+      user.update(q1: 2)
+      message = {
+        type: 'text',
+        text: "#{user.name}のq1を#{user.q1}にリセットしたぜ"
+      }
     elsif user.q1 == 0
       message = {
         type: 'template',
@@ -74,28 +80,49 @@ class ApiController < ApplicationController
           ]
         }
       }
-    # elsif user.q2 == 0 && janken_time?
-    #   message = {
-    #     type: 'template',
-    #     altText: 'じゃんけんスタート前',
-    #     template: {
-    #       thumbnailImageUrl: helpers.image_url('kensi.png'),
-    #       type: 'buttons',
-    #       title: 'ちょきじゃんけんはじまるよ',
-    #       text: 'あいこだったらちょきの勝ち、ってルールだよ。やるかい？',
-    #       actions: [
-    #         {
-    #           type: 'postback',
-    #           label: 'やる！',
-    #           data: 'event=janken0'
-    #         },
-    #       ]
-    #     }
-    #   }
-    # elsif user.q2 != 0 && janken_result_time?
-    #   # じゃんけん結果発表
+    elsif user.q2 == 0 && janken_time? && user.q1 == 2
+      message = {
+        type: 'template',
+        altText: 'じゃんけんスタート前',
+        template: {
+          thumbnailImageUrl: helpers.image_url('kensi.png'),
+          type: 'buttons',
+          title: 'ちょきじゃんけんはじまるよ',
+          text: 'あいこだったらちょきの勝ち、ってルールだよ。やるかい？',
+          actions: [
+            {
+              type: 'postback',
+              label: 'やる！',
+              data: 'event=janken0'
+            },
+            {
+              type: 'postback',
+              label: '今回はやめとく',
+              data: 'event=jankenx'
+            },
+          ]
+        }
+      }
+    elsif user.q2 != 0 && janken_time? && user.q1 == 2
+      # じゃんけん結果発表まで待ってもらう
+      message = {
+        type: 'text',
+        text: "じゃんけん結果は#{next_result_time}なんだ。そのときに話しかけてくれよ"
+      }
+    elsif user.q2 == 0 && janken_result_time? && user.q1 == 2
+      # 次のじゃんけんまで待ってもらう
+      message = {
+        type: 'text',
+        text: "次のじゃんけんは#{next_janken_time}だぜ。時間になったら話しかけてくれよ"
+      }
+    elsif user.q2 != 0 && janken_result_time? && user.q1 == 2
+      # じゃんけん結果発表
     else
       # 次のじゃんけんまで待ってもらう
+      message = {
+        type: 'text',
+        text: "次のじゃんけんは#{next_janken_time}だぜ。時間になったら話しかけてくれよ"
+      }
     end
     @client.reply_message(event['replyToken'], message)
   end
@@ -112,6 +139,11 @@ class ApiController < ApplicationController
   def reply_to_janken(event, user)
     _, choice = event['postback']['data'].split('=')
     case choice
+    when 'jankenx'
+      message = {
+        type: 'text',
+        text: 'そうかい。じゃあ、また話しかけてくれよ'
+      }
     when 'janken0'
       message = {
         type: 'template',
