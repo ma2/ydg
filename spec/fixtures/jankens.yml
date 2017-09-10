@@ -1,13 +1,21 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 jk01:
+  id: 1
   jid: 201708101200
 
 jk02:
+  id: 2
   jid: 201708101230
 
 jk03:
+  id: 3
   jid: 201708101330
 
 jk04:
+  id: 4
   jid: 201708101500
+
+jk05:
+  id: 5
+  jid: 201708152200

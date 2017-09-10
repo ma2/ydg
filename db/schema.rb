@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170903144932) do
+ActiveRecord::Schema.define(version: 20170905123311) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(version: 20170903144932) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "useid"
+    t.string "userid"
     t.string "name"
     t.integer "q1", default: 0
     t.integer "q2", default: 0
@@ -43,6 +43,4 @@ ActiveRecord::Schema.define(version: 20170903144932) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "hands", "jankens"
-  add_foreign_key "hands", "users"
 end

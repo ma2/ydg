@@ -1,6 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 u01:
+  id: 1
   userid: user01
   name: name01
   q1: 0
@@ -10,6 +11,7 @@ u01:
   q5: 0
 
 u02:
+  id: 2
   userid: user02
   name: name02
   q1: 0
@@ -19,6 +21,7 @@ u02:
   q5: 0
 
 u03:
+  id: 3
   userid: user03
   name: name03
   q1: 0

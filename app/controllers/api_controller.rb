@@ -80,7 +80,7 @@ class ApiController < ApplicationController
           ]
         }
       }
-    elsif user.q2 == 0 && janken_time? && user.q1 == 2
+    elsif user.janken_status == :janken_and_yet && user.q1 == 2
       message = {
         type: 'template',
         altText: 'じゃんけんスタート前',
@@ -103,22 +103,28 @@ class ApiController < ApplicationController
           ]
         }
       }
-    elsif user.q2 != 0 && janken_time? && user.q1 == 2
+    elsif user.janken_status == :janken_and_done && user.q1 == 2
       # じゃんけん結果発表まで待ってもらう
       message = {
         type: 'text',
-        text: "じゃんけん結果は#{next_result_time}なんだ。そのときに話しかけてくれよ"
+        text: "結果の発表は#{next_result_time}なんだ。そのときに話しかけてくれよ"
       }
-    elsif user.q2 == 0 && janken_result_time? && user.q1 == 2
+    elsif user.janken_status == :result_and_done && user.q1 == 2
+      # じゃんけん結果発表
+      result = Janken.result
+      v = %w(ぐー ちょき ぱー)[result['v']]
+      message = {
+        type: 'text',
+        text: "ぐーが#{result[0]}人、ちょきが#{result[1]}人、ぱーが#{result[2]}人、勝ったのは#{v}だぜ！ #{user.name}は#{user.q3}勝#{user.q3}敗#{user.q3}分けだ"
+      }
+    elsif user.q1 == 2
       # 次のじゃんけんまで待ってもらう
       message = {
         type: 'text',
         text: "次のじゃんけんは#{next_janken_time}だぜ。時間になったら話しかけてくれよ"
       }
-    elsif user.q2 != 0 && janken_result_time? && user.q1 == 2
-      # じゃんけん結果発表
     else
-      # 次のじゃんけんまで待ってもらう
+      # 告知は完了。じゃんけんモードになっていない
       message = {
         type: 'text',
         text: "次のじゃんけんは#{next_janken_time}だぜ。時間になったら話しかけてくれよ"
@@ -152,7 +158,7 @@ class ApiController < ApplicationController
           thumbnailImageUrl: helpers.image_url('kensi.png'),
           type: 'buttons',
           title: '手を選んでくれよ',
-          text: 'あいこだったらちょきの勝ちだぞ。ちょきじゃんけん、じゃんけんぽん！',
+          text: 'いいか。あいこだったらちょきの勝ちだぞ。ちょきじゃんけん、じゃんけんぽん！',
           actions: [
             {
               type: 'postback',
@@ -174,13 +180,13 @@ class ApiController < ApplicationController
       }
     when /janken_(.*)/
       gcp = %w(goo choki paa).index($1)
-      user.update(q2: gcp+1)
+      user.do_janken(gcp)
       message = {
         type: 'text',
         text: "結果は#{next_result_time}に発表するから、その頃にまた話しかけてくれよな"
       }
     else
-
+      # ここには来ない
     end
     @client.reply_message(event['replyToken'], message)
   end

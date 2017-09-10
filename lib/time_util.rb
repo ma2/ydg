@@ -29,9 +29,9 @@ module TimeUtil
 
   # 最後のじゃんけんid
   def last_jid
-    tm = Time.current.strftime('%Y%m%d%H')
-    min = (tm.min >= 0 && tm.min < 30) ? '00' : '30'
-    tm + min
+    tm = Time.current
+    min = (tm.min < 30) ? '00' : '30'
+    tm.strftime('%Y%m%d%H') + min
   end
 
   # 今のじゃんけんid

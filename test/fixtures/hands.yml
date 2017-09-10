@@ -1,11 +1,51 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  value: 1
-  janjen: one
-  user: one
+h01:
+  value: 0
+  janken: j01
+  user: u01
 
-two:
+h02:
   value: 1
-  janjen: two
-  user: two
+  janken: j01
+  user: u02
+
+h03:
+  value: 2
+  janken: j01
+  user: u03
+
+h04:
+  value: 1
+  janken: j02
+  user: u01
+
+h05:
+  value: 1
+  janken: j02
+  user: u02
+
+h06:
+  value: 1
+  janken: j02
+  user: u03
+
+h07:
+  value: 0
+  janken: j03
+  user: u01
+
+h08:
+  value: 1
+  janken: j03
+  user: u02
+
+h09:
+  value: 2
+  janken: j04
+  user: u01
+
+h10:
+  value: 0
+  janken: j04
+  user: u03
