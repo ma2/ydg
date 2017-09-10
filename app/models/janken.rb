@@ -20,6 +20,8 @@ class Janken < ApplicationRecord
     User.all.each do |user|
       user.set_result(v, last_jid)
     end
+    # 集計処理完了
+    janken.update(aggregated: true)
   end
 
   # 結果報告（ぐー、ちょき、ぱーがいくつずつだったか）
