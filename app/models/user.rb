@@ -48,9 +48,9 @@ class User < ApplicationRecord
   def janken_status
     if janken_time?
       jid = current_jid
-      return my_hand(jid) ? :janken_and_yet : :janken_and_done
+      return my_hand(jid) ? :janken_and_done : :janken_and_yet
     end
     jid = last_jid
-    my_hand(jid) ? :result_and_yet : :result_and_done
+    my_hand(jid) ? :result_and_done : :result_and_yet
   end
 end
