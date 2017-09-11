@@ -118,7 +118,7 @@ class ApiController < ApplicationController
         v = %w(ぐー ちょき ぱー)[result['v']]
         message = {
           type: 'text',
-          text: "#{tm} ぐーが#{result[0]}人、ちょきが#{result[1]}人、ぱーが#{result[2]}人、勝ったのは#{v}だぜ！ #{user.name}は#{user.q3}勝#{user.q3}敗#{user.q3}分けだ"
+          text: "#{tm} ぐーが#{result[0]}人、ちょきが#{result[1]}人、ぱーが#{result[2]}人、勝ったのは#{v}だぜ！ #{user.name}は#{user.q3}勝#{user.q4}敗#{user.q5}分けだ"
         }
       else
         message = {
