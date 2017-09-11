@@ -123,7 +123,7 @@ class ApiController < ApplicationController
       else
         message = {
           type: 'text',
-          text: "#{tm} 人数が集まらなかったようだな……！ #{user.name}は#{user.q3}勝#{user.q3}敗#{user.q3}分けだ"
+          text: "#{tm} 人数が集まらなかったようだな……！ #{user.name}は#{user.q3}勝#{user.q4}敗#{user.q5}分けだ"
         }
       end
     elsif user.q1 == 2
