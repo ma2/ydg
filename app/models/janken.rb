@@ -15,8 +15,12 @@ class Janken < ApplicationRecord
     # 対応するじゃんけんがなかった
     return unless janken
     return if janken.aggregated
-      v = janken.victory
-    return unless v
+    v = janken.victory
+    unless v
+      # 参加人数がひとり以下
+      janken.update(aggregated: true)
+      return
+    end
     # ユーザの勝ち負け数を設定する
     User.all.each do |user|
       user.set_result(v, last_jid)
