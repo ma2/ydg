@@ -114,7 +114,7 @@ class ApiController < ApplicationController
       result = Janken.result(user.last_jid)
       user.last_jid =~ /\d\d\d\d(\d\d)(\d\d)(\d\d)(\d\d)/
       tm = "#{$1}/#{$2} #{$3}:#{$4}"
-      if result
+      if result && result['v']
         v = %w(ぐー ちょき ぱー)[result['v']]
         message = {
           type: 'text',

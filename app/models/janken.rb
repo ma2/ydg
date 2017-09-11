@@ -9,6 +9,7 @@ class Janken < ApplicationRecord
   validates :jid, uniqueness: true
 
   # ユーザの中でじゃんけんに参加している人の勝敗を計算する
+  # TODO: aggregateがnilのじゃんけんを全て集計する
   def self.aggregate(jid=nil)
     # じゃんけんを取得
     janken = find_by(jid: jid || last_jid)
