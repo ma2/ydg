@@ -111,11 +111,13 @@ class ApiController < ApplicationController
       }
     elsif user.janken_status == :result_and_done && user.q1 == 2
       # じゃんけん結果発表
-      result = Janken.result
+      result = Janken.result(user.last_jid)
+      user.last_jid =~ /\d\d\d\d(\d\d)(\d\d)(\d\d)(\d\d)/
+      tm = "#{$1}/#{$2} #{$3}:#{$4}"
       v = %w(ぐー ちょき ぱー)[result['v']]
       message = {
         type: 'text',
-        text: "ぐーが#{result[0]}人、ちょきが#{result[1]}人、ぱーが#{result[2]}人、勝ったのは#{v}だぜ！ #{user.name}は#{user.q3}勝#{user.q3}敗#{user.q3}分けだ"
+        text: "#{tm} ぐーが#{result[0]}人、ちょきが#{result[1]}人、ぱーが#{result[2]}人、勝ったのは#{v}だぜ！ #{user.name}は#{user.q3}勝#{user.q3}敗#{user.q3}分けだ"
       }
     elsif user.q1 == 2
       # 次のじゃんけんまで待ってもらう
@@ -127,7 +129,7 @@ class ApiController < ApplicationController
       # 告知は完了。じゃんけんモードになっていない
       message = {
         type: 'text',
-        text: "次のじゃんけんは#{next_janken_time}だぜ。時間になったら話しかけてくれよ"
+        text: 'んーと。他に何かあったっけー？'
       }
     end
     @client.reply_message(event['replyToken'], message)

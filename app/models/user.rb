@@ -7,6 +7,10 @@ class User < ApplicationRecord
 
   validates :userid, uniqueness: true
 
+  # 自分が参加した最新のじゃんけんのjid
+  def last_jid
+    jankens.maximum(:jid)
+  end
   # jidで取得できるじゃんけんにおける自分の手
   # じゃんけんが存在しなければnil
   # 自分が参加していなければnil
