@@ -9,9 +9,9 @@ class Janken < ApplicationRecord
   validates :jid, uniqueness: true
 
   # ユーザの中でじゃんけんに参加している人の勝敗を計算する
-  def self.aggregate
-    # 前回のじゃんけんを取得
-    janken = find_by(jid: last_jid)
+  def self.aggregate(jid=nil)
+    # じゃんけんを取得
+    janken = find_by(jid: jid || last_jid)
     # 対応するじゃんけんがなかった
     return unless janken
     return if janken.aggregated

@@ -114,11 +114,18 @@ class ApiController < ApplicationController
       result = Janken.result(user.last_jid)
       user.last_jid =~ /\d\d\d\d(\d\d)(\d\d)(\d\d)(\d\d)/
       tm = "#{$1}/#{$2} #{$3}:#{$4}"
-      v = %w(ぐー ちょき ぱー)[result['v']]
-      message = {
-        type: 'text',
-        text: "#{tm} ぐーが#{result[0]}人、ちょきが#{result[1]}人、ぱーが#{result[2]}人、勝ったのは#{v}だぜ！ #{user.name}は#{user.q3}勝#{user.q3}敗#{user.q3}分けだ"
-      }
+      if result
+        v = %w(ぐー ちょき ぱー)[result['v']]
+        message = {
+          type: 'text',
+          text: "#{tm} ぐーが#{result[0]}人、ちょきが#{result[1]}人、ぱーが#{result[2]}人、勝ったのは#{v}だぜ！ #{user.name}は#{user.q3}勝#{user.q3}敗#{user.q3}分けだ"
+        }
+      else
+        message = {
+          type: 'text',
+          text: "#{tm} 人数が集まらなかったようだな……！ #{user.name}は#{user.q3}勝#{user.q3}敗#{user.q3}分けだ"
+        }
+      end
     elsif user.q1 == 2
       # 次のじゃんけんまで待ってもらう
       message = {
