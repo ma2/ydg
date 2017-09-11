@@ -14,7 +14,8 @@ class Janken < ApplicationRecord
     janken = find_by(jid: last_jid)
     # 対応するじゃんけんがなかった
     return unless janken
-    v = janken.victory
+    return if janken.aggregated
+      v = janken.victory
     return unless v
     # ユーザの勝ち負け数を設定する
     User.all.each do |user|
